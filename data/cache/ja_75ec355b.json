@@ -1,0 +1,13 @@
+{
+  "language": "ja",
+  "language_name": "Japanese",
+  "script": "Hiragana, Katakana, Kanji",
+  "family": "Japonic",
+  "native_name": "日本語",
+  "speakers": "125 million",
+  "region": "Japan",
+  "sample_text": "こんにちは、元気ですか？",
+  "source": "LRLRE Language Database",
+  "confidence": 95.0,
+  "timestamp": "2026-01-29T14:27:52.608625"
+}

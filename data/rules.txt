@@ -1,0 +1,1 @@
+﻿loves(john,mary) => emotional_bond(john,mary)

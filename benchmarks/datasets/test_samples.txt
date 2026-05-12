@@ -1,0 +1,15 @@
+﻿en|The cat is on the mat.
+en|I would like to order a pizza.
+en|What time does the train leave?
+fr|Le chat est sur le tapis.
+fr|Je voudrais commander une pizza.
+fr|À quelle heure part le train ?
+ja|猫はマットの上にいます。
+ja|ピザを注文したいです。
+ja|電車は何時に出発しますか？
+ko|고양이가 매트 위에 있어요.
+ko|피자를 주문하고 싶습니다.
+ko|기차는 몇 시에 출발하나요?
+zh|猫在垫子上。
+zh|我想点一份披萨。
+zh|火车什么时候出发？

@@ -1,0 +1,13 @@
+{
+  "language": "ko",
+  "language_name": "Korean",
+  "script": "Hangul",
+  "family": "Koreanic",
+  "native_name": "한국어",
+  "speakers": "77 million",
+  "region": "Korea",
+  "sample_text": "안녕하세요, 잘 지내세요?",
+  "source": "LRLRE Language Database",
+  "confidence": 95.0,
+  "timestamp": "2026-01-29T14:27:35.116190"
+}

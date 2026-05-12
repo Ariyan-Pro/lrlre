@@ -1,0 +1,57 @@
+﻿services:
+  lrlre-analysis:
+    build: .
+    container_name: lrlre-v7
+    ports:
+      - "8007:8007"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    command: uvicorn start_analytics_v7:app --host 0.0.0.0 --port 8007
+    restart: unless-stopped
+    networks:
+      - lrlre-network
+
+  lrlre-visual:
+    build: .
+    container_name: lrlre-v8
+    ports:
+      - "8009:8009"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    command: uvicorn start_analytics_v8_bento_grid:app --host 0.0.0.0 --port 8009
+    restart: unless-stopped
+    networks:
+      - lrlre-network
+
+  lrlre-ultimate:
+    build: .
+    container_name: lrlre-v10
+    ports:
+      - "8013:8013"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    command: uvicorn ultimate_v10_fixed:app --host 0.0.0.0 --port 8013
+    restart: unless-stopped
+    networks:
+      - lrlre-network
+
+  lrlre-nginx:
+    image: nginx:alpine
+    container_name: lrlre-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - lrlre-analysis
+      - lrlre-visual
+      - lrlre-ultimate
+    networks:
+      - lrlre-network
+
+networks:
+  lrlre-network:
+    driver: bridge

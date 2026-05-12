@@ -1,0 +1,13 @@
+{
+  "language": "zh",
+  "language_name": "Chinese",
+  "script": "Hanzi",
+  "family": "Sino-Tibetan",
+  "native_name": "中文",
+  "speakers": "1.3 billion",
+  "region": "China, Taiwan, Singapore",
+  "sample_text": "你好，你怎么样？",
+  "source": "LRLRE Language Database",
+  "confidence": 95.0,
+  "timestamp": "2026-01-29T15:22:42.987389"
+}
