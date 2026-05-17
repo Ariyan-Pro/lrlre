@@ -13,101 +13,41 @@
         }
 
         :root {
-            --gold-primary: #D4AF37;
-            --gold-light: #F4DF89;
-            --gold-dark: #AA8C2C;
-            --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #F4DF89 50%, #AA8C2C 100%);
-            --black-bg: #0a0a0a;
-            --black-card: #111111;
-            --black-glass: rgba(17, 17, 17, 0.7);
-            --glass-border: rgba(212, 175, 55, 0.3);
+            --gold: #D4AF37;
+            --gold-dim: rgba(212, 175, 55, 0.3);
+            --black: #000000;
+            --black-card: #0a0a0a;
+            --black-lighter: #111111;
+            --white: #ffffff;
+            --white-dim: rgba(255, 255, 255, 0.7);
+            --white-muted: rgba(255, 255, 255, 0.5);
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--black-bg);
-            color: #ffffff;
+            background: var(--black);
+            color: var(--white);
             overflow-x: hidden;
             min-height: 100vh;
+            line-height: 1.6;
         }
 
-        /* Animated Background */
-        .bg-animation {
+        /* Minimal Background */
+        .bg-gradient {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: 
-                radial-gradient(ellipse at 20% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.95) 0%, var(--black-bg) 100%);
+            background: radial-gradient(ellipse at top, #1a1a1a 0%, #000000 70%);
         }
 
-        /* Floating Particles */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--gold-primary);
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: float 15s infinite ease-in-out;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.3; }
-            90% { opacity: 0.3; }
-            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
-        }
-
-        /* Tree Growth Animation Container */
-        .tree-container {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.15;
-        }
-
-        .tree-svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .tree-branch {
-            stroke: var(--gold-primary);
-            stroke-width: 2;
-            fill: none;
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            animation: growBranch 3s ease-out forwards;
-        }
-
-        .tree-branch:nth-child(1) { animation-delay: 0.5s; }
-        .tree-branch:nth-child(2) { animation-delay: 1s; }
-        .tree-branch:nth-child(3) { animation-delay: 1.5s; }
-        .tree-branch:nth-child(4) { animation-delay: 2s; }
-        .tree-branch:nth-child(5) { animation-delay: 2.5s; }
-
-        @keyframes growBranch {
-            to { stroke-dashoffset: 0; }
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
         }
 
         /* Hero Section */
@@ -118,72 +58,111 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 2rem;
+            padding: 4rem 2rem;
             position: relative;
-            z-index: 1;
         }
 
         .hero-logo {
-            font-size: 5rem;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            animation: glow 2s ease-in-out infinite alternate;
+            font-size: 6rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 60px rgba(212, 175, 55, 0.4);
+            animation: pulse 3s ease-in-out infinite;
         }
 
-        @keyframes glow {
-            from { filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5)); }
-            to { filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.8)); }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.02); }
         }
 
         .hero-title {
-            font-size: 3.5rem;
+            font-size: 4rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, #ffffff 0%, var(--gold-light) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--white);
+            letter-spacing: -2px;
         }
 
         .hero-subtitle {
-            font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.7);
-            max-width: 800px;
-            margin-bottom: 2rem;
-            line-height: 1.6;
+            font-size: 1.4rem;
+            color: var(--white-dim);
+            max-width: 700px;
+            margin-bottom: 3rem;
+            line-height: 1.8;
         }
 
         .hero-badges {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
             flex-wrap: wrap;
             justify-content: center;
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
         }
 
         .badge {
-            padding: 0.5rem 1.5rem;
-            background: var(--black-glass);
-            border: 1px solid var(--glass-border);
+            padding: 0.75rem 2rem;
+            background: var(--black-card);
+            border: 1px solid var(--gold-dim);
             border-radius: 50px;
-            font-size: 0.9rem;
-            backdrop-filter: blur(10px);
+            font-size: 0.95rem;
+            color: var(--white-dim);
             transition: all 0.3s ease;
         }
 
         .badge:hover {
-            background: rgba(212, 175, 55, 0.2);
+            border-color: var(--gold);
+            color: var(--gold);
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.25rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        .btn-primary:hover {
+            background: #e5c147;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid var(--white-dim);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateY(-5px);
         }
 
         /* Scroll Indicator */
         .scroll-indicator {
             position: absolute;
-            bottom: 2rem;
+            bottom: 3rem;
             left: 50%;
             transform: translateX(-50%);
             animation: bounce 2s infinite;
@@ -191,239 +170,183 @@
 
         .scroll-indicator i {
             font-size: 2rem;
-            color: var(--gold-primary);
+            color: var(--gold);
         }
 
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-            40% { transform: translateX(-50%) translateY(-20px); }
-            60% { transform: translateX(-50%) translateY(-10px); }
+            40% { transform: translateX(-50%) translateY(-15px); }
+            60% { transform: translateX(-50%) translateY(-8px); }
         }
 
-        /* Bento Grid Section */
-        .bento-section {
-            padding: 5rem 2rem;
-            position: relative;
-            z-index: 1;
+        /* Section Styling */
+        section {
+            padding: 8rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
         }
 
         .section-title {
-            text-align: center;
             font-size: 3rem;
+            font-weight: 700;
+            color: var(--white);
             margin-bottom: 1rem;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            letter-spacing: -1px;
         }
 
         .section-subtitle {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 4rem;
+            color: var(--white-muted);
             font-size: 1.2rem;
-        }
-
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(3, minmax(200px, auto));
-            gap: 1.5rem;
-            max-width: 1400px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
         .bento-card {
-            background: var(--black-glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 2rem;
-            backdrop-filter: blur(20px);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: var(--black-card);
+            border: 1px solid #1a1a1a;
+            border-radius: 24px;
+            padding: 3rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
-            cursor: pointer;
-        }
-
-        .bento-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .bento-card:hover::before {
-            left: 100%;
         }
 
         .bento-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.3);
-            border-color: var(--gold-primary);
+            border-color: var(--gold-dim);
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
         }
 
         .bento-card.large {
             grid-column: span 2;
-            grid-row: span 2;
-        }
-
-        .bento-card.wide {
-            grid-column: span 2;
-        }
-
-        .bento-card.tall {
-            grid-row: span 2;
         }
 
         .card-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 3.5rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
         }
 
         .card-title {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: #ffffff;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 1rem;
         }
 
         .card-description {
-            color: rgba(255, 255, 255, 0.6);
-            line-height: 1.6;
+            color: var(--white-muted);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--black-lighter);
+            border: 1px solid #1a1a1a;
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--gold-dim);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 1.25rem;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-desc {
+            color: var(--white-muted);
             font-size: 0.95rem;
         }
 
-        .card-stats {
-            display: flex;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--gold-primary);
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.5);
-            text-transform: uppercase;
-        }
-
-        /* 3D Flip Card */
-        .flip-card {
-            perspective: 1000px;
-            height: 100%;
-        }
-
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
-        }
-
-        .flip-card:hover .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .flip-card-front,
-        .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 20px;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .flip-card-front {
-            background: var(--black-glass);
-            border: 1px solid var(--glass-border);
-        }
-
-        .flip-card-back {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.9) 0%, rgba(170, 140, 44, 0.9) 100%);
-            transform: rotateY(180deg);
-            color: #000;
-        }
-
-        .flip-card-back .card-title,
-        .flip-card-back .card-description {
-            color: #000;
-        }
-
         /* Version Cards */
+        .versions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
         .version-card {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(17, 17, 17, 0.8) 100%);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
+            background: var(--black-card);
+            border: 1px solid #1a1a1a;
+            border-radius: 24px;
+            padding: 3rem;
             transition: all 0.4s ease;
             position: relative;
-            overflow: hidden;
-        }
-
-        .version-card::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
-            animation: rotate 10s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
         }
 
         .version-card:hover {
+            border-color: var(--gold);
             transform: translateY(-10px);
-            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
         }
 
         .version-badge {
             display: inline-block;
             padding: 0.5rem 1.5rem;
-            background: var(--gold-gradient);
-            color: #000;
+            background: var(--gold);
+            color: var(--black);
             border-radius: 50px;
             font-weight: 700;
-            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .version-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .version-desc {
+            color: var(--white-muted);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
         }
 
         .version-features {
             list-style: none;
-            margin-top: 1.5rem;
-            text-align: left;
         }
 
         .version-features li {
-            padding: 0.5rem 0;
-            color: rgba(255, 255, 255, 0.7);
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 0.75rem 0;
+            color: var(--white-dim);
+            border-bottom: 1px solid #1a1a1a;
+            font-size: 0.95rem;
         }
 
         .version-features li:last-child {
@@ -432,135 +355,130 @@
 
         .version-features li::before {
             content: '✓';
-            color: var(--gold-primary);
-            margin-right: 0.5rem;
+            color: var(--gold);
+            margin-right: 0.75rem;
             font-weight: 700;
         }
 
-        /* Performance Metrics */
-        .metrics-grid {
+        /* Stats Section */
+        .stats-section {
+            background: var(--black-lighter);
+            padding: 6rem 0;
+        }
+
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
+            gap: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--white-muted);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Integration Cards */
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
             margin-top: 3rem;
         }
 
-        .metric-item {
-            text-align: center;
-            padding: 2rem;
-            background: var(--black-glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
+        .integration-card {
+            background: var(--black-card);
+            border: 1px solid #1a1a1a;
+            border-radius: 24px;
+            padding: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
             transition: all 0.3s ease;
+            text-decoration: none;
         }
 
-        .metric-item:hover {
-            transform: scale(1.05);
-            border-color: var(--gold-primary);
-            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+        .integration-card:hover {
+            border-color: var(--gold);
+            transform: translateX(10px);
         }
 
-        .metric-value {
+        .integration-icon {
             font-size: 3rem;
-            font-weight: 700;
-            background: var(--gold-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+
+        .integration-content h3 {
+            font-size: 1.5rem;
+            color: var(--white);
             margin-bottom: 0.5rem;
         }
 
-        .metric-label {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 1rem;
+        .integration-content p {
+            color: var(--white-muted);
+            font-size: 0.95rem;
         }
 
-        /* CTA Section */
-        .cta-section {
-            padding: 5rem 2rem;
-            text-align: center;
-            position: relative;
-            z-index: 1;
+        .integration-arrow {
+            margin-left: auto;
+            color: var(--gold);
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
         }
 
-        .cta-button {
-            display: inline-block;
-            padding: 1.5rem 4rem;
-            background: var(--gold-gradient);
-            color: #000;
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-decoration: none;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .cta-button:hover::before {
-            left: 100%;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.6);
+        .integration-card:hover .integration-arrow {
+            transform: translateX(5px);
         }
 
         /* Footer */
         footer {
-            padding: 3rem 2rem;
+            padding: 4rem 0;
+            border-top: 1px solid #1a1a1a;
             text-align: center;
-            border-top: 1px solid rgba(212, 175, 55, 0.2);
-            position: relative;
-            z-index: 1;
         }
 
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .social-links {
+        .footer-socials {
             display: flex;
             justify-content: center;
-            gap: 2rem;
+            gap: 2.5rem;
             margin-bottom: 2rem;
         }
 
         .social-link {
             font-size: 2rem;
-            color: var(--gold-primary);
+            color: var(--white-muted);
             transition: all 0.3s ease;
         }
 
         .social-link:hover {
-            color: var(--gold-light);
-            transform: translateY(-5px) scale(1.1);
+            color: var(--gold);
+            transform: scale(1.15);
         }
 
         .copyright {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.9rem;
+            color: var(--white-muted);
+            font-size: 0.95rem;
         }
 
-        /* Scroll Animations */
+        /* Scroll Reveal Animation */
         .reveal {
             opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s ease;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .reveal.active {
@@ -568,10 +486,339 @@
             transform: translateY(0);
         }
 
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 1200px) {
-            .bento-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .versions-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 1.5rem; }
+            .hero-title { font-size: 2.5rem; }
+            .hero-subtitle { font-size: 1.1rem; }
+            .bento-grid { grid-template-columns: 1fr; }
+            .bento-card.large { grid-column: span 1; }
+            .features-grid { grid-template-columns: 1fr; }
+            .integration-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Selection color */
+        ::selection {
+            background: var(--gold);
+            color: var(--black);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-logo">
+            <i class="fas fa-brain"></i>
+        </div>
+        <h1 class="hero-title">LRLRE</h1>
+        <p class="hero-subtitle">
+            Low-Resource Language Reasoning Engine — Enterprise-grade NLP infrastructure 
+            with advanced semantics, syntax analysis, and multilingual support
+        </p>
+        <div class="hero-badges">
+            <span class="badge"><i class="fas fa-bolt"></i> High Performance</span>
+            <span class="badge"><i class="fas fa-shield-alt"></i> Production Ready</span>
+            <span class="badge"><i class="fas fa-globe"></i> Multilingual</span>
+            <span class="badge"><i class="fas fa-cube"></i> v10.0 Latest</span>
+        </div>
+        <div class="cta-buttons">
+            <a href="https://github.com/Ariyan-Pro/LRLRE" class="btn btn-primary">
+                <i class="fab fa-github"></i> View on GitHub
+            </a>
+            <a href="https://huggingface.co/spaces/Ariyan-Pro/LRLRE-HUB" target="_blank" class="btn btn-secondary">
+                <i class="fas fa-robot"></i> Try Hugging Face Demo
+            </a>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Features Bento Grid -->
+    <section class="container">
+        <div class="section-header reveal">
+            <h2 class="section-title">Core Capabilities</h2>
+            <p class="section-subtitle">Advanced NLP features built for enterprise scalability</p>
+        </div>
+        <div class="bento-grid">
+            <div class="bento-card large reveal">
+                <i class="fas fa-language card-icon"></i>
+                <h3 class="card-title">Multilingual Processing</h3>
+                <p class="card-description">
+                    Support for low-resource languages with advanced tokenization, 
+                    semantic analysis, and cross-lingual understanding. Built with 
+                    extensive linguistic databases and rule-based systems.
+                </p>
+            </div>
+            <div class="bento-card reveal">
+                <i class="fas fa-microchip card-icon"></i>
+                <h3 class="card-title">Neural Engine</h3>
+                <p class="card-description">
+                    Optimized inference engine with sub-millisecond latency
+                </p>
+            </div>
+            <div class="bento-card reveal">
+                <i class="fas fa-lock card-icon"></i>
+                <h3 class="card-title">Enterprise Security</h3>
+                <p class="card-description">
+                    AES-256 encryption, audit logging, RBAC access control
+                </p>
+            </div>
+            <div class="bento-card reveal">
+                <i class="fas fa-chart-line card-icon"></i>
+                <h3 class="card-title">Real-time Analytics</h3>
+                <p class="card-description">
+                    Live monitoring dashboards with performance metrics
+                </p>
+            </div>
+            <div class="bento-card reveal">
+                <i class="fas fa-sync card-icon"></i>
+                <h3 class="card-title">WebSocket Streaming</h3>
+                <p class="card-description">
+                    Bi-directional real-time communication channels
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Features -->
+    <section class="container">
+        <div class="section-header reveal">
+            <h2 class="section-title">Feature Modules</h2>
+            <p class="section-subtitle">Comprehensive toolkit for language processing</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card reveal">
+                <i class="fas fa-code feature-icon"></i>
+                <h4 class="feature-title">Syntax Analysis</h4>
+                <p class="feature-desc">Deep parsing and grammatical structure analysis</p>
+            </div>
+            <div class="feature-card reveal">
+                <i class="fas fa-brain feature-icon"></i>
+                <h4 class="feature-title">Semantics</h4>
+                <p class="feature-desc">Context-aware meaning extraction and reasoning</p>
+            </div>
+            <div class="feature-card reveal">
+                <i class="fas fa-font feature-icon"></i>
+                <h4 class="feature-title">Tokenizer</h4>
+                <p class="feature-desc">Advanced tokenization for 100+ languages</p>
+            </div>
+            <div class="feature-card reveal">
+                <i class="fas fa-project-diagram feature-icon"></i>
+                <h4 class="feature-title">Metrics</h4>
+                <p class="feature-desc">Comprehensive performance benchmarking</p>
+            </div>
+            <div class="feature-card reveal">
+                <i class="fas fa-network-wired feature-icon"></i>
+                <h4 class="feature-title">Distributed</h4>
+                <p class="feature-desc">Horizontal scaling across multiple nodes</p>
+            </div>
+            <div class="feature-card reveal">
+                <i class="fas fa-eye feature-icon"></i>
+                <h4 class="feature-title">Monitoring</h4>
+                <p class="feature-desc">24/7 system health and performance tracking</p>
+            </div>
+            <div class="feature-card reveal">
+                <i class="fas fa-shield feature-icon"></i>
+                <h4 class="feature-title">Security</h4>
+                <p class="feature-desc">End-to-end encryption and threat detection</p>
+            </div>
+            <div class="feature-card reveal">
+                <i class="fas fa-cogs feature-icon"></i>
+                <h4 class="feature-title">API Layer</h4>
+                <p class="feature-desc">RESTful and GraphQL API endpoints</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Version History -->
+    <section class="container">
+        <div class="section-header reveal">
+            <h2 class="section-title">Version Evolution</h2>
+            <p class="section-subtitle">Continuous improvement and feature expansion</p>
+        </div>
+        <div class="versions-grid">
+            <div class="version-card reveal">
+                <span class="version-badge">v7.0</span>
+                <h3 class="version-title">Foundation</h3>
+                <p class="version-desc">Initial release with core functionality</p>
+                <ul class="version-features">
+                    <li>Basic tokenization engine</li>
+                    <li>Syntax parsing module</li>
+                    <li>REST API foundation</li>
+                    <li>Logging infrastructure</li>
+                    <li>Performance benchmarks</li>
+                </ul>
+            </div>
+            <div class="version-card reveal">
+                <span class="version-badge">v8.2</span>
+                <h3 class="version-title">Expansion</h3>
+                <p class="version-desc">Enhanced capabilities and integrations</p>
+                <ul class="version-features">
+                    <li>Semantic analysis layer</li>
+                    <li>WebSocket streaming</li>
+                    <li>Real-time analytics</li>
+                    <li>Multi-node support</li>
+                    <li>Enhanced security protocols</li>
+                </ul>
+            </div>
+            <div class="version-card reveal">
+                <span class="version-badge">v10.0</span>
+                <h3 class="version-title">Enterprise</h3>
+                <p class="version-desc">Production-ready enterprise solution</p>
+                <ul class="version-features">
+                    <li>Full multilingual support</li>
+                    <li>Advanced monitoring dashboard</li>
+                    <li>RBAC & audit logging</li>
+                    <li>Auto-scaling infrastructure</li>
+                    <li>99.9% uptime SLA</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item reveal">
+                    <div class="stat-value">100+</div>
+                    <div class="stat-label">Languages</div>
+                </div>
+                <div class="stat-item reveal">
+                    <div class="stat-value">&lt;1ms</div>
+                    <div class="stat-label">Latency</div>
+                </div>
+                <div class="stat-item reveal">
+                    <div class="stat-value">99.9%</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+                <div class="stat-item reveal">
+                    <div class="stat-value">10M+</div>
+                    <div class="stat-label">Requests/Day</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integrations -->
+    <section class="container">
+        <div class="section-header reveal">
+            <h2 class="section-title">Quick Access</h2>
+            <p class="section-subtitle">Connect with LRLRE across platforms</p>
+        </div>
+        <div class="integration-grid">
+            <a href="https://github.com/Ariyan-Pro/LRLRE" target="_blank" class="integration-card reveal">
+                <i class="fab fa-github integration-icon"></i>
+                <div class="integration-content">
+                    <h3>GitHub Repository</h3>
+                    <p>Source code, documentation, and issue tracking</p>
+                </div>
+                <i class="fas fa-arrow-right integration-arrow"></i>
+            </a>
+            <a href="https://huggingface.co/spaces/Ariyan-Pro/LRLRE-HUB" target="_blank" class="integration-card reveal">
+                <i class="fas fa-robot integration-icon"></i>
+                <div class="integration-content">
+                    <h3>Hugging Face Space</h3>
+                    <p>Interactive demo and model hub</p>
+                </div>
+                <i class="fas fa-arrow-right integration-arrow"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/ariyan-pro-ai-ml-5693aa37a/" target="_blank" class="integration-card reveal">
+                <i class="fab fa-linkedin integration-icon"></i>
+                <div class="integration-content">
+                    <h3>LinkedIn Profile</h3>
+                    <p>Professional network and updates</p>
+                </div>
+                <i class="fas fa-arrow-right integration-arrow"></i>
+            </a>
+            <a href="mailto:contact@lrlre.dev" class="integration-card reveal">
+                <i class="fas fa-envelope integration-icon"></i>
+                <div class="integration-content">
+                    <h3>Contact & Support</h3>
+                    <p>Get in touch for enterprise inquiries</p>
+                </div>
+                <i class="fas fa-arrow-right integration-arrow"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-socials">
+                <a href="https://github.com/Ariyan-Pro/LRLRE" target="_blank" class="social-link">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://huggingface.co/spaces/Ariyan-Pro/LRLRE-HUB" target="_blank" class="social-link">
+                    <i class="fas fa-robot"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/ariyan-pro-ai-ml-5693aa37a/" target="_blank" class="social-link">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </div>
+            <p class="copyright">
+                © 2024 LRLRE. Built for the future of language AI.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Optimized scroll reveal with intersection observer
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // Smooth hover effect for cards (GPU accelerated)
+        document.querySelectorAll('.bento-card, .feature-card, .version-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // Parallax effect for hero (lightweight)
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+                hero.style.opacity = 1 - (scrolled / window.innerHeight);
+            }
+        }, { passive: true });
+    </script>
+</body>
+</html>at(2, 1fr);
             }
             
             .bento-card.large {
