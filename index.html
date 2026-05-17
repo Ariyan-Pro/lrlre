@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LRLRE - Low-Resource Language Reasoning Engine</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold-primary: #FFD700;
+            --gold-light: #FFE55C;
+            --gold-dark: #B8860B;
+            --gold-gradient: linear-gradient(135deg, #FFD700 0%, #FFE55C 50%, #B8860B 100%);
+            --black-bg: #0a0a0a;
+            --black-card: #121212;
+            --black-light: #1a1a1a;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 215, 0, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--black-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(184, 134, 11, 0.05) 0%, transparent 50%);
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--gold-primary);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Header */
+        header {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--gold-primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold-gradient);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 5%;
+            position: relative;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 1200px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3)); }
+            50% { filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.6)); }
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .badge {
+            padding: 0.5rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+        }
+
+        /* Tree Animation Container */
+        .tree-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin: 3rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .tree {
+            position: relative;
+            width: 300px;
+            height: 350px;
+        }
+
+        .trunk {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 100px;
+            background: var(--gold-gradient);
+            border-radius: 10px 10px 0 0;
+            animation: growTrunk 2s ease-out forwards;
+        }
+
+        @keyframes growTrunk {
+            from { height: 0; }
+            to { height: 100px; }
+        }
+
+        .branch {
+            position: absolute;
+            width: 80px;
+            height: 3px;
+            background: var(--gold-gradient);
+            border-radius: 3px;
+            opacity: 0;
+            transform-origin: left center;
+        }
+
+        .branch:nth-child(2) {
+            bottom: 80px;
+            left: 50%;
+            transform: rotate(-30deg);
+            animation: growBranch 1s ease-out 2s forwards;
+        }
+
+        .branch:nth-child(3) {
+            bottom: 80px;
+            left: 50%;
+            transform: rotate(30deg) scaleX(-1);
+            animation: growBranch 1s ease-out 2.2s forwards;
+        }
+
+        .branch:nth-child(4) {
+            bottom: 130px;
+            left: 50%;
+            transform: rotate(-25deg);
+            animation: growBranch 1s ease-out 2.4s forwards;
+        }
+
+        .branch:nth-child(5) {
+            bottom: 130px;
+            left: 50%;
+            transform: rotate(25deg) scaleX(-1);
+            animation: growBranch 1s ease-out 2.6s forwards;
+        }
+
+        .branch:nth-child(6) {
+            bottom: 180px;
+            left: 50%;
+            transform: rotate(-20deg);
+            animation: growBranch 1s ease-out 2.8s forwards;
+        }
+
+        .branch:nth-child(7) {
+            bottom: 180px;
+            left: 50%;
+            transform: rotate(20deg) scaleX(-1);
+            animation: growBranch 1s ease-out 3s forwards;
+        }
+
+        @keyframes growBranch {
+            from { width: 0; opacity: 0; }
+            to { width: 80px; opacity: 1; }
+        }
+
+        .leaf {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: var(--gold-gradient);
+            border-radius: 50% 0 50% 0;
+            opacity: 0;
+            animation: growLeaf 0.5s ease-out forwards;
+        }
+
+        .leaf:nth-child(8) { bottom: 75px; left: calc(50% - 30px); animation-delay: 3.2s; }
+        .leaf:nth-child(9) { bottom: 75px; left: calc(50% + 50px); animation-delay: 3.4s; transform: scaleX(-1); }
+        .leaf:nth-child(10) { bottom: 125px; left: calc(50% - 25px); animation-delay: 3.6s; }
+        .leaf:nth-child(11) { bottom: 125px; left: calc(50% + 45px); animation-delay: 3.8s; transform: scaleX(-1); }
+        .leaf:nth-child(12) { bottom: 175px; left: calc(50% - 20px); animation-delay: 4s; }
+        .leaf:nth-child(13) { bottom: 175px; left: calc(50% + 40px); animation-delay: 4.2s; transform: scaleX(-1); }
+        .leaf:nth-child(14) { bottom: 220px; left: calc(50% - 10px); animation-delay: 4.4s; }
+        .leaf:nth-child(15) { bottom: 220px; left: calc(50% + 35px); animation-delay: 4.6s; transform: scaleX(-1); }
+
+        @keyframes growLeaf {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Bento Grid Section */
+        .bento-section {
+            padding: 6rem 5%;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 4rem;
+            font-size: 1.2rem;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(3, 300px);
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .bento-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            transform-style: preserve-3d;
+        }
+
+        .bento-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .bento-card:hover::before {
+            left: 100%;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(255, 215, 0, 0.2);
+            border-color: var(--gold-primary);
+        }
+
+        .bento-card.large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .bento-card.tall {
+            grid-row: span 2;
+        }
+
+        .bento-card.wide {
+            grid-column: span 2;
+        }
+
+        .bento-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .bento-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--gold-primary);
+        }
+
+        .bento-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .bento-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Version Cards */
+        .versions-section {
+            padding: 6rem 5%;
+            background: linear-gradient(180deg, transparent, rgba(255, 215, 0, 0.02), transparent);
+        }
+
+        .version-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .version-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .version-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .version-card:hover::after {
+            opacity: 1;
+        }
+
+        .version-card:hover {
+            transform: translateY(-15px) rotateY(5deg);
+            box-shadow: 0 40px 80px rgba(255, 215, 0, 0.3);
+            border-color: var(--gold-primary);
+        }
+
+        .version-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: var(--gold-gradient);
+            border-radius: 50px;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--black-bg);
+        }
+
+        .version-card h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--gold-primary);
+        }
+
+        .version-card ul {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .version-card li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .version-card li i {
+            color: var(--gold-primary);
+        }
+
+        .version-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--gold-gradient);
+            color: var(--black-bg);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .version-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Features with Scroll Animation */
+        .features-section {
+            padding: 6rem 5%;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .feature-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-item:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 20px 50px rgba(255, 215, 0, 0.2);
+            border-color: var(--gold-primary);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gold-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--black-bg);
+        }
+
+        .feature-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--gold-primary);
+        }
+
+        .feature-item p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 5%;
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-box {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            padding: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--gold-primary), transparent 30%);
+            animation: rotate 4s linear infinite;
+            opacity: 0.1;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-box h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-box p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            padding: 1.2rem 3rem;
+            background: var(--gold-gradient);
+            color: var(--black-bg);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
+        }
+
+        .btn-secondary {
+            padding: 1.2rem 3rem;
+            background: transparent;
+            color: var(--gold-primary);
+            border: 2px solid var(--gold-primary);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: var(--gold-primary);
+            color: var(--black-bg);
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            background: rgba(10, 10, 10, 0.9);
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-primary);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--gold-gradient);
+            color: var(--black-bg);
+            transform: translateY(-5px);
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-highlight {
+            color: var(--gold-primary);
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: auto;
+            }
+
+            .bento-card.large,
+            .bento-card.wide {
+                grid-column: span 1;
+            }
+
+            .bento-card.tall {
+                grid-row: span 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .version-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* Mouse Hover Effect */
+        .cursor-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            mix-blend-mode: screen;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation"></div>
+    <div class="particles" id="particles"></div>
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-brain"></i>
+            LRLRE
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#versions">Versions</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Low-Resource Language Reasoning Engine</h1>
+            <p>Enterprise-grade symbolic NLP reasoning system for edge environments</p>
+            
+            <div class="hero-badges">
+                <span class="badge"><i class="fab fa-python"></i> Python 3.11</span>
+                <span class="badge"><i class="fas fa-bolt"></i> FastAPI</span>
+                <span class="badge"><i class="fas fa-shield-alt"></i> MIT License</span>
+                <span class="badge"><i class="fas fa-memory"></i> &lt; 100MB</span>
+            </div>
+
+            <!-- Tree Animation -->
+            <div class="tree-container">
+                <div class="tree">
+                    <div class="trunk"></div>
+                    <div class="branch"></div>
+                    <div class="branch"></div>
+                    <div class="branch"></div>
+                    <div class="branch"></div>
+                    <div class="branch"></div>
+                    <div class="branch"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                </div>
+            </div>
+
+            <div class="cta-buttons">
+                <a href="https://github.com/dell/lrlre" class="btn-primary">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+                <a href="#versions" class="btn-secondary">
+                    <i class="fas fa-download"></i> Get Started
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bento Grid Section -->
+    <section class="bento-section" id="features">
+        <h2 class="section-title">Powerful Features</h2>
+        <p class="section-subtitle">Built for performance, designed for excellence</p>
+        
+        <div class="bento-grid">
+            <div class="bento-card large">
+                <i class="fas fa-brain bento-icon"></i>
+                <h3>100% Symbolic Reasoning</h3>
+                <p>No LLMs, no neural models. Pure deterministic inference using Robinson's unification and Forward/Backward Chaining algorithms.</p>
+                <div class="bento-stats">
+                    <div class="stat">
+                        <div class="stat-value">&lt;5ms</div>
+                        <div class="stat-label">CRUD Ops</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">50-100ms</div>
+                        <div class="stat-label">Reasoning</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-card">
+                <i class="fas fa-language bento-icon"></i>
+                <h3>Multilingual</h3>
+                <p>Support for English, Japanese, Korean, Chinese, and French with advanced language detection.</p>
+            </div>
+
+            <div class="bento-card tall">
+                <i class="fas fa-chart-line bento-icon"></i>
+                <h3>Performance Metrics</h3>
+                <p>Built for edge deployment with minimal resource footprint.</p>
+                <div class="bento-stats">
+                    <div class="stat">
+                        <div class="stat-value">&lt;100MB</div>
+                        <div class="stat-label">Memory</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">100+</div>
+                        <div class="stat-label">Users</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">10K+</div>
+                        <div class="stat-label">Facts</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-card">
+                <i class="fas fa-database bento-icon"></i>
+                <h3>Knowledge Graph</h3>
+                <p>NetworkX-powered graph structures with SQLite persistence.</p>
+            </div>
+
+            <div class="bento-card wide">
+                <i class="fas fa-microchip bento-icon"></i>
+                <h3>Edge Optimized</h3>
+                <p>Designed specifically for edge environments with minimal resource requirements while maintaining enterprise-grade capabilities.</p>
+            </div>
+
+            <div class="bento-card">
+                <i class="fas fa-plug bento-icon"></i>
+                <h3>Real-time WebSocket</h3>
+                <p>Live updates and instant communication with clients.</p>
+            </div>
+
+            <div class="bento-card">
+                <i class="fas fa-shield-check bento-icon"></i>
+                <h3>Type Safe</h3>
+                <p>Pydantic validation ensuring data integrity throughout the system.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Versions Section -->
+    <section class="versions-section" id="versions">
+        <h2 class="section-title">Three Production Versions</h2>
+        <p class="section-subtitle">Choose the perfect edition for your needs</p>
+        
+        <div class="version-cards">
+            <div class="version-card">
+                <span class="version-badge">v7.0</span>
+                <h3>Analysis Edition</h3>
+                <p>Best for detailed analysis and debugging</p>
+                <ul>
+                    <li><i class="fas fa-check"></i> Detailed Unicode Analysis</li>
+                    <li><i class="fas fa-check"></i> Logical Analysis</li>
+                    <li><i class="fas fa-check"></i> Entity Analysis</li>
+                    <li><i class="fas fa-check"></i> Comprehensive Logging</li>
+                </ul>
+                <a href="#" class="version-btn">Launch v7.0</a>
+            </div>
+
+            <div class="version-card">
+                <span class="version-badge">v8.2</span>
+                <h3>Bento Grid Edition</h3>
+                <p>Best for visual presentations and demos</p>
+                <ul>
+                    <li><i class="fas fa-check"></i> Bento Grid UI</li>
+                    <li><i class="fas fa-check"></i> Flip Card Animations</li>
+                    <li><i class="fas fa-check"></i> Scroll Effects</li>
+                    <li><i class="fas fa-check"></i> Multiple Themes</li>
+                </ul>
+                <a href="#" class="version-btn">Launch v8.2</a>
+            </div>
+
+            <div class="version-card">
+                <span class="version-badge" style="background: linear-gradient(135deg, #FFD700, #FFF, #B8860B);">v10.0</span>
+                <h3>Ultimate Edition</h3>
+                <p>Everything combined - Recommended</p>
+                <ul>
+                    <li><i class="fas fa-check"></i> All v7.0 Features</li>
+                    <li><i class="fas fa-check"></i> All v8.2 Animations</li>
+                    <li><i class="fas fa-check"></i> Enhanced Performance</li>
+                    <li><i class="fas fa-check"></i> Complete Integration</li>
+                </ul>
+                <a href="#" class="version-btn">Launch v10.0</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section with Scroll Animation -->
+    <section class="features-section" id="about">
+        <h2 class="section-title">Why Choose LRLRE?</h2>
+        <p class="section-subtitle">Enterprise-grade features for modern applications</p>
+        
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Lightning Fast</h3>
+                <p>Sub-5ms CRUD operations and 50-100ms complex reasoning cycles ensure responsive performance even under heavy load.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-expand"></i>
+                </div>
+                <h3>Highly Scalable</h3>
+                <p>Support for 100+ simultaneous users and 10,000+ facts/rules capacity makes it perfect for enterprise deployments.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>100% Explainable</h3>
+                <p>Every inference is traceable and explainable. No black-box neural networks, just pure symbolic reasoning.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3>Multilingual Ready</h3>
+                <p>Built-in support for 5 languages with extensible architecture for adding more language processors.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Edge Optimized</h3>
+                <p>Less than 100MB memory footprint makes it ideal for edge devices and resource-constrained environments.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-wrench"></i>
+                </div>
+                <h3>Easy Integration</h3>
+                <p>REST API and WebSocket interfaces make integration with existing systems straightforward and efficient.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="contact">
+        <div class="cta-box">
+            <div class="cta-content">
+                <h2>Ready to Get Started?</h2>
+                <p>Join the future of symbolic AI reasoning. Deploy LRLRE in your environment today.</p>
+                <div class="cta-buttons">
+                    <a href="https://github.com/dell/lrlre" class="btn-primary">
+                        <i class="fab fa-github"></i> Clone Repository
+                    </a>
+                    <a href="#" class="btn-secondary">
+                        <i class="fas fa-book"></i> Read Documentation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="https://github.com/dell/lrlre" class="social-link">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="fab fa-discord"></i>
+                </a>
+            </div>
+            <p class="footer-text">
+                Built with <span class="footer-highlight">❤️</span> by the LRLRE Project Team
+            </p>
+            <p class="footer-text">
+                <span class="footer-highlight">100% Symbolic</span> • 
+                <span class="footer-highlight">0% Neural</span> • 
+                <span class="footer-highlight">100% Explainable</span>
+            </p>
+            <p class="footer-text" style="margin-top: 1rem; font-size: 0.9rem;">
+                &copy; 2024 LRLRE. Licensed under MIT License.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Create particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Cursor glow effect
+        const cursorGlow = document.getElementById('cursorGlow');
+        document.addEventListener('mousemove', (e) => {
+            cursorGlow.style.left = e.clientX + 'px';
+            cursorGlow.style.top = e.clientY + 'px';
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-item').forEach((item, index) => {
+            item.style.transitionDelay = (index * 0.1) + 's';
+            observer.observe(item);
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 3D card tilt effect
+        document.querySelectorAll('.bento-card, .version-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            });
+        });
+
+        // Parallax effect on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach((particle, index) => {
+                const speed = 0.1 + (index % 5) * 0.05;
+                particle.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+
+        // Animate stats on scroll
+        const animateValue = (obj, start, end, duration) => {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        // Trigger tree animation on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelectorAll('.leaf').forEach((leaf, index) => {
+                    leaf.style.animationDelay = (3.2 + index * 0.2) + 's';
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>
