@@ -47,13 +47,18 @@ class SimpleLanguageDetector:
             "peut", "peuvent", "pouvait", "pouvaient",
             "veut", "veulent", "voulait", "voulaient",
             "dit", "disent", "disait", "disaient",
+            "va", "vont", "allait", "allaient",  # aller (to go)
+            "au", "aux",  # à + le/les contractions
             
             # Pronouns
-            "je", "tu", "il", "elle", "on", "nous", "vous", "ils", "elles",
+            "je", "tu", "il", "elle", "nous", "vous", "ils", "elles",
             "me", "te", "se", "lui", "leur",
             "ce", "cet", "cette", "ces",
             "mon", "ton", "son", "notre", "votre", "leur",
             "ma", "ta", "sa", "nos", "vos", "leurs",
+            
+            # Note: "on" is excluded due to English false positives
+            # It's handled separately with context checking below
             
             # Prepositions
             "sur", "dans", "avec", "pour", "sans", "chez", "vers", "depuis",
@@ -128,6 +133,19 @@ class SimpleLanguageDetector:
         # Check for French articles at start of sentences
         if text_lower.startswith(("le ", "la ", "les ", "un ", "une ", "des ")):
             french_score += 10
+        
+        # Context-aware handling of "on" (French pronoun vs English preposition)
+        # Only count "on" as French if it appears with other French indicators
+        # or in typical French contexts (start of sentence, followed by verb)
+        if " on " in f" {text_lower} ":
+            # Check if there are other strong French indicators
+            has_french_accents = any(c in text for c in "éèêëàâäîïôöûüçÉÈÊËÀÂÄÎÏÔÖÛÜÇ")
+            has_french_contractions = any(contr in text_lower for contr in ["l'", "d'", "j'", "c'", "n'", "s'", "m'", "t'", "qu'"])
+            has_other_french_words = french_word_count > 0
+            
+            # Only add score for "on" if there are other French indicators
+            if has_french_accents or has_french_contractions or has_other_french_words:
+                french_score += 3  # Small bonus for "on" when context suggests French
         
         # DEBUG: Print score for testing
         # print(f"French score: {french_score} for text: {text[:30]}...")
