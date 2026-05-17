@@ -1,10 +1,14 @@
+--- index.html (原始)
+
+
++++ index.html (修改后)
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LRLRE - Low-Resource Language Reasoning Engine</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -13,20 +17,23 @@
         }
 
         :root {
-            --gold-primary: #D4AF37;
-            --gold-light: #F4DF89;
-            --gold-dark: #AA8C2C;
-            --gold-gradient: linear-gradient(135deg, #D4AF37 0%, #F4DF89 50%, #AA8C2C 100%);
+            --gold-primary: #FFD700;
+            --gold-light: #FFE55C;
+            --gold-dark: #B8860B;
+            --gold-gradient: linear-gradient(135deg, #FFD700 0%, #FFE55C 50%, #B8860B 100%);
             --black-bg: #0a0a0a;
-            --black-card: #111111;
-            --black-glass: rgba(17, 17, 17, 0.7);
-            --glass-border: rgba(212, 175, 55, 0.3);
+            --black-card: #121212;
+            --black-light: #1a1a1a;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 215, 0, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8b8;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--black-bg);
-            color: #ffffff;
+            color: var(--text-primary);
             overflow-x: hidden;
             min-height: 100vh;
         }
@@ -39,21 +46,20 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: 
-                radial-gradient(ellipse at 20% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.95) 0%, var(--black-bg) 100%);
+            background:
+                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(184, 134, 11, 0.05) 0%, transparent 50%);
         }
 
-        /* Floating Particles */
         .particles {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
             z-index: -1;
+            pointer-events: none;
         }
 
         .particle {
@@ -63,7 +69,7 @@
             background: var(--gold-primary);
             border-radius: 50%;
             opacity: 0.3;
-            animation: float 15s infinite ease-in-out;
+            animation: float 15s infinite;
         }
 
         @keyframes float {
@@ -73,138 +79,241 @@
             100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
         }
 
-        /* Tree Growth Animation Container */
-        .tree-container {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
+        /* Header */
+        header {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--gold-primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold-gradient);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
             width: 100%;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.15;
-        }
-
-        .tree-svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .tree-branch {
-            stroke: var(--gold-primary);
-            stroke-width: 2;
-            fill: none;
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            animation: growBranch 3s ease-out forwards;
-        }
-
-        .tree-branch:nth-child(1) { animation-delay: 0.5s; }
-        .tree-branch:nth-child(2) { animation-delay: 1s; }
-        .tree-branch:nth-child(3) { animation-delay: 1.5s; }
-        .tree-branch:nth-child(4) { animation-delay: 2s; }
-        .tree-branch:nth-child(5) { animation-delay: 2.5s; }
-
-        @keyframes growBranch {
-            to { stroke-dashoffset: 0; }
         }
 
         /* Hero Section */
         .hero {
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
-            text-align: center;
-            padding: 2rem;
+            justify-content: center;
+            padding: 4rem 5%;
             position: relative;
-            z-index: 1;
         }
 
-        .hero-logo {
-            font-size: 5rem;
+        .hero-content {
+            text-align: center;
+            max-width: 1200px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
             background: var(--gold-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 1rem;
-            animation: glow 2s ease-in-out infinite alternate;
+            animation: glow 3s ease-in-out infinite;
         }
 
         @keyframes glow {
-            from { filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5)); }
-            to { filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.8)); }
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3)); }
+            50% { filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.6)); }
         }
 
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #ffffff 0%, var(--gold-light) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
+        .hero p {
             font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.7);
-            max-width: 800px;
+            color: var(--text-secondary);
             margin-bottom: 2rem;
-            line-height: 1.6;
         }
 
         .hero-badges {
             display: flex;
+            justify-content: center;
             gap: 1rem;
             flex-wrap: wrap;
-            justify-content: center;
             margin-bottom: 3rem;
         }
 
         .badge {
             padding: 0.5rem 1.5rem;
-            background: var(--black-glass);
+            background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: 50px;
-            font-size: 0.9rem;
             backdrop-filter: blur(10px);
+            font-size: 0.9rem;
             transition: all 0.3s ease;
         }
 
         .badge:hover {
-            background: rgba(212, 175, 55, 0.2);
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
         }
 
-        /* Scroll Indicator */
-        .scroll-indicator {
+        /* Tree Animation Container */
+        .tree-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin: 3rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .tree {
+            position: relative;
+            width: 300px;
+            height: 350px;
+        }
+
+        .trunk {
             position: absolute;
-            bottom: 2rem;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            animation: bounce 2s infinite;
+            width: 20px;
+            height: 100px;
+            background: var(--gold-gradient);
+            border-radius: 10px 10px 0 0;
+            animation: growTrunk 2s ease-out forwards;
         }
 
-        .scroll-indicator i {
-            font-size: 2rem;
-            color: var(--gold-primary);
+        @keyframes growTrunk {
+            from { height: 0; }
+            to { height: 100px; }
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-            40% { transform: translateX(-50%) translateY(-20px); }
-            60% { transform: translateX(-50%) translateY(-10px); }
+        .branch {
+            position: absolute;
+            width: 80px;
+            height: 3px;
+            background: var(--gold-gradient);
+            border-radius: 3px;
+            opacity: 0;
+            transform-origin: left center;
+        }
+
+        .branch:nth-child(2) {
+            bottom: 80px;
+            left: 50%;
+            transform: rotate(-30deg);
+            animation: growBranch 1s ease-out 2s forwards;
+        }
+
+        .branch:nth-child(3) {
+            bottom: 80px;
+            left: 50%;
+            transform: rotate(30deg) scaleX(-1);
+            animation: growBranch 1s ease-out 2.2s forwards;
+        }
+
+        .branch:nth-child(4) {
+            bottom: 130px;
+            left: 50%;
+            transform: rotate(-25deg);
+            animation: growBranch 1s ease-out 2.4s forwards;
+        }
+
+        .branch:nth-child(5) {
+            bottom: 130px;
+            left: 50%;
+            transform: rotate(25deg) scaleX(-1);
+            animation: growBranch 1s ease-out 2.6s forwards;
+        }
+
+        .branch:nth-child(6) {
+            bottom: 180px;
+            left: 50%;
+            transform: rotate(-20deg);
+            animation: growBranch 1s ease-out 2.8s forwards;
+        }
+
+        .branch:nth-child(7) {
+            bottom: 180px;
+            left: 50%;
+            transform: rotate(20deg) scaleX(-1);
+            animation: growBranch 1s ease-out 3s forwards;
+        }
+
+        @keyframes growBranch {
+            from { width: 0; opacity: 0; }
+            to { width: 80px; opacity: 1; }
+        }
+
+        .leaf {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: var(--gold-gradient);
+            border-radius: 50% 0 50% 0;
+            opacity: 0;
+            animation: growLeaf 0.5s ease-out forwards;
+        }
+
+        .leaf:nth-child(8) { bottom: 75px; left: calc(50% - 30px); animation-delay: 3.2s; }
+        .leaf:nth-child(9) { bottom: 75px; left: calc(50% + 50px); animation-delay: 3.4s; transform: scaleX(-1); }
+        .leaf:nth-child(10) { bottom: 125px; left: calc(50% - 25px); animation-delay: 3.6s; }
+        .leaf:nth-child(11) { bottom: 125px; left: calc(50% + 45px); animation-delay: 3.8s; transform: scaleX(-1); }
+        .leaf:nth-child(12) { bottom: 175px; left: calc(50% - 20px); animation-delay: 4s; }
+        .leaf:nth-child(13) { bottom: 175px; left: calc(50% + 40px); animation-delay: 4.2s; transform: scaleX(-1); }
+        .leaf:nth-child(14) { bottom: 220px; left: calc(50% - 10px); animation-delay: 4.4s; }
+        .leaf:nth-child(15) { bottom: 220px; left: calc(50% + 35px); animation-delay: 4.6s; transform: scaleX(-1); }
+
+        @keyframes growLeaf {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
         /* Bento Grid Section */
         .bento-section {
-            padding: 5rem 2rem;
-            position: relative;
-            z-index: 1;
+            padding: 6rem 5%;
         }
 
         .section-title {
@@ -219,7 +328,7 @@
 
         .section-subtitle {
             text-align: center;
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--text-secondary);
             margin-bottom: 4rem;
             font-size: 1.2rem;
         }
@@ -227,22 +336,23 @@
         .bento-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(3, minmax(200px, auto));
+            grid-template-rows: repeat(3, 300px);
             gap: 1.5rem;
             max-width: 1400px;
             margin: 0 auto;
         }
 
         .bento-card {
-            background: var(--black-glass);
+            background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 2rem;
             backdrop-filter: blur(20px);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 2rem;
             position: relative;
             overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
+            transform-style: preserve-3d;
         }
 
         .bento-card::before {
@@ -252,7 +362,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
             transition: left 0.5s ease;
         }
 
@@ -262,7 +372,7 @@
 
         .bento-card:hover {
             transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 30px 60px rgba(255, 215, 0, 0.2);
             border-color: var(--gold-primary);
         }
 
@@ -271,15 +381,15 @@
             grid-row: span 2;
         }
 
-        .bento-card.wide {
-            grid-column: span 2;
-        }
-
         .bento-card.tall {
             grid-row: span 2;
         }
 
-        .card-icon {
+        .bento-card.wide {
+            grid-column: span 2;
+        }
+
+        .bento-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
             background: var(--gold-gradient);
@@ -288,21 +398,20 @@
             background-clip: text;
         }
 
-        .card-title {
+        .bento-card h3 {
             font-size: 1.5rem;
             margin-bottom: 0.5rem;
-            color: #ffffff;
+            color: var(--gold-primary);
         }
 
-        .card-description {
-            color: rgba(255, 255, 255, 0.6);
+        .bento-card p {
+            color: var(--text-secondary);
             line-height: 1.6;
-            font-size: 0.95rem;
         }
 
-        .card-stats {
+        .bento-stats {
             display: flex;
-            gap: 1.5rem;
+            gap: 2rem;
             margin-top: 1.5rem;
         }
 
@@ -313,72 +422,39 @@
         .stat-value {
             font-size: 2rem;
             font-weight: 700;
-            color: var(--gold-primary);
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .stat-label {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.5);
-            text-transform: uppercase;
-        }
-
-        /* 3D Flip Card */
-        .flip-card {
-            perspective: 1000px;
-            height: 100%;
-        }
-
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
-        }
-
-        .flip-card:hover .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .flip-card-front,
-        .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 20px;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .flip-card-front {
-            background: var(--black-glass);
-            border: 1px solid var(--glass-border);
-        }
-
-        .flip-card-back {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.9) 0%, rgba(170, 140, 44, 0.9) 100%);
-            transform: rotateY(180deg);
-            color: #000;
-        }
-
-        .flip-card-back .card-title,
-        .flip-card-back .card-description {
-            color: #000;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
         /* Version Cards */
+        .versions-section {
+            padding: 6rem 5%;
+            background: linear-gradient(180deg, transparent, rgba(255, 215, 0, 0.02), transparent);
+        }
+
+        .version-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
         .version-card {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(17, 17, 17, 0.8) 100%);
+            background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 2rem;
+            border-radius: 25px;
+            backdrop-filter: blur(20px);
+            padding: 3rem;
             text-align: center;
-            transition: all 0.4s ease;
+            transition: all 0.5s ease;
             position: relative;
             overflow: hidden;
         }
@@ -390,8 +466,160 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
-            animation: rotate 10s linear infinite;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .version-card:hover::after {
+            opacity: 1;
+        }
+
+        .version-card:hover {
+            transform: translateY(-15px) rotateY(5deg);
+            box-shadow: 0 40px 80px rgba(255, 215, 0, 0.3);
+            border-color: var(--gold-primary);
+        }
+
+        .version-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: var(--gold-gradient);
+            border-radius: 50px;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--black-bg);
+        }
+
+        .version-card h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--gold-primary);
+        }
+
+        .version-card ul {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .version-card li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .version-card li i {
+            color: var(--gold-primary);
+        }
+
+        .version-btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--gold-gradient);
+            color: var(--black-bg);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .version-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Features with Scroll Animation */
+        .features-section {
+            padding: 6rem 5%;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .feature-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-item:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 20px 50px rgba(255, 215, 0, 0.2);
+            border-color: var(--gold-primary);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gold-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--black-bg);
+        }
+
+        .feature-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--gold-primary);
+        }
+
+        .feature-item p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 5%;
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-box {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            padding: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--gold-primary), transparent 30%);
+            animation: rotate 4s linear infinite;
+            opacity: 0.1;
         }
 
         @keyframes rotate {
@@ -399,133 +627,79 @@
             to { transform: rotate(360deg); }
         }
 
-        .version-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.4);
+        .cta-content {
+            position: relative;
+            z-index: 1;
         }
 
-        .version-badge {
-            display: inline-block;
-            padding: 0.5rem 1.5rem;
-            background: var(--gold-gradient);
-            color: #000;
-            border-radius: 50px;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .version-features {
-            list-style: none;
-            margin-top: 1.5rem;
-            text-align: left;
-        }
-
-        .version-features li {
-            padding: 0.5rem 0;
-            color: rgba(255, 255, 255, 0.7);
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        .version-features li:last-child {
-            border-bottom: none;
-        }
-
-        .version-features li::before {
-            content: '✓';
-            color: var(--gold-primary);
-            margin-right: 0.5rem;
-            font-weight: 700;
-        }
-
-        /* Performance Metrics */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .metric-item {
-            text-align: center;
-            padding: 2rem;
-            background: var(--black-glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-
-        .metric-item:hover {
-            transform: scale(1.05);
-            border-color: var(--gold-primary);
-            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
-        }
-
-        .metric-value {
+        .cta-box h2 {
             font-size: 3rem;
-            font-weight: 700;
+            margin-bottom: 1rem;
             background: var(--gold-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 0.5rem;
         }
 
-        .metric-label {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 1rem;
-        }
-
-        /* CTA Section */
-        .cta-section {
-            padding: 5rem 2rem;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 1.5rem 4rem;
-            background: var(--gold-gradient);
-            color: #000;
+        .cta-box p {
             font-size: 1.2rem;
-            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            padding: 1.2rem 3rem;
+            background: var(--gold-gradient);
+            color: var(--black-bg);
             text-decoration: none;
             border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.4);
-            position: relative;
-            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
+        .btn-primary:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
         }
 
-        .cta-button:hover::before {
-            left: 100%;
+        .btn-secondary {
+            padding: 1.2rem 3rem;
+            background: transparent;
+            color: var(--gold-primary);
+            border: 2px solid var(--gold-primary);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .cta-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.6);
+        .btn-secondary:hover {
+            background: var(--gold-primary);
+            color: var(--black-bg);
+            transform: scale(1.1);
         }
 
         /* Footer */
         footer {
-            padding: 3rem 2rem;
+            padding: 3rem 5%;
+            background: rgba(10, 10, 10, 0.9);
+            border-top: 1px solid var(--glass-border);
             text-align: center;
-            border-top: 1px solid rgba(212, 175, 55, 0.2);
-            position: relative;
-            z-index: 1;
         }
 
         .footer-content {
@@ -536,417 +710,393 @@
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 2rem;
+            gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
         .social-link {
-            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: var(--gold-primary);
+            font-size: 1.5rem;
             transition: all 0.3s ease;
         }
 
         .social-link:hover {
-            color: var(--gold-light);
-            transform: translateY(-5px) scale(1.1);
+            background: var(--gold-gradient);
+            color: var(--black-bg);
+            transform: translateY(-5px);
         }
 
-        .copyright {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.9rem;
+        .footer-text {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
         }
 
-        /* Scroll Animations */
-        .reveal {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s ease;
+        .footer-highlight {
+            color: var(--gold-primary);
+            font-weight: 700;
         }
 
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 1200px) {
             .bento-grid {
                 grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: auto;
             }
-            
-            .bento-card.large {
-                grid-column: span 2;
+
+            .bento-card.large,
+            .bento-card.wide {
+                grid-column: span 1;
+            }
+
+            .bento-card.tall {
+                grid-row: span 1;
             }
         }
 
         @media (max-width: 768px) {
-            .hero-title {
+            .hero h1 {
                 font-size: 2.5rem;
             }
-            
-            .hero-subtitle {
+
+            .hero p {
                 font-size: 1.2rem;
             }
-            
+
+            nav ul {
+                display: none;
+            }
+
             .bento-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .bento-card.large,
-            .bento-card.wide,
-            .bento-card.tall {
-                grid-column: span 1;
-                grid-row: span 1;
+
+            .version-cards {
+                grid-template-columns: 1fr;
             }
-            
-            .metrics-grid {
-                grid-template-columns: repeat(2, 1fr);
+
+            .section-title {
+                font-size: 2rem;
             }
         }
 
-        /* Mouse Hover Glow Effect */
-        .glow-effect {
+        /* Mouse Hover Effect */
+        .cursor-glow {
             position: fixed;
             width: 400px;
             height: 400px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
             pointer-events: none;
-            z-index: 9999;
             transform: translate(-50%, -50%);
-            transition: opacity 0.3s ease;
+            z-index: 9999;
+            mix-blend-mode: screen;
         }
     </style>
 </head>
 <body>
     <!-- Background Animation -->
     <div class="bg-animation"></div>
-    
-    <!-- Floating Particles -->
     <div class="particles" id="particles"></div>
-    
-    <!-- Mouse Glow Effect -->
-    <div class="glow-effect" id="glowEffect"></div>
-    
-    <!-- Tree Growth Animation -->
-    <div class="tree-container">
-        <svg class="tree-svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMax meet">
-            <path class="tree-branch" d="M400,600 C400,500 380,450 350,400 C320,350 280,320 250,280"/>
-            <path class="tree-branch" d="M400,600 C400,500 420,450 450,400 C480,350 520,320 550,280"/>
-            <path class="tree-branch" d="M350,400 C330,370 300,350 270,320 C240,290 200,270 170,250"/>
-            <path class="tree-branch" d="M450,400 C470,370 500,350 530,320 C560,290 600,270 630,250"/>
-            <path class="tree-branch" d="M400,600 C400,450 380,350 350,280 C320,210 280,150 250,100"/>
-        </svg>
-    </div>
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-brain"></i>
+            LRLRE
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#versions">Versions</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
     <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-logo">
-            <i class="fas fa-brain"></i>
-        </div>
-        <h1 class="hero-title">LRLRE</h1>
-        <p class="hero-subtitle">
-            Enterprise-grade symbolic NLP reasoning system for edge environments. 
-            100% Symbolic • 0% Neural • 100% Explainable
-        </p>
-        
-        <div class="hero-badges">
-            <span class="badge"><i class="fab fa-python"></i> Python 3.11</span>
-            <span class="badge"><i class="fas fa-bolt"></i> FastAPI</span>
-            <span class="badge"><i class="fas fa-shield-alt"></i> MIT License</span>
-            <span class="badge"><i class="fas fa-memory"></i> &lt; 100MB</span>
-            <span class="badge"><i class="fas fa-globe"></i> 5 Languages</span>
-        </div>
-        
-        <div class="scroll-indicator">
-            <i class="fas fa-chevron-down"></i>
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Low-Resource Language Reasoning Engine</h1>
+            <p>Enterprise-grade symbolic NLP reasoning system for edge environments</p>
+
+            <div class="hero-badges">
+                <span class="badge"><i class="fab fa-python"></i> Python 3.11</span>
+                <span class="badge"><i class="fas fa-bolt"></i> FastAPI</span>
+                <span class="badge"><i class="fas fa-shield-alt"></i> MIT License</span>
+                <span class="badge"><i class="fas fa-memory"></i> &lt; 100MB</span>
+            </div>
+
+            <!-- Tree Animation -->
+            <div class="tree-container">
+                <div class="tree">
+                    <div class="trunk"></div>
+                    <div class="branch"></div>
+                    <div class="branch"></div>
+                    <div class="branch"></div>
+                    <div class="branch"></div>
+                    <div class="branch"></div>
+                    <div class="branch"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                    <div class="leaf"></div>
+                </div>
+            </div>
+
+            <div class="cta-buttons">
+                <a href="https://github.com/dell/lrlre" class="btn-primary">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+                <a href="#versions" class="btn-secondary">
+                    <i class="fas fa-download"></i> Get Started
+                </a>
+            </div>
         </div>
     </section>
 
-    <!-- Features Bento Grid -->
-    <section class="bento-section">
-        <h2 class="section-title reveal">Core Features</h2>
-        <p class="section-subtitle reveal">Discover what makes LRLRE unique</p>
-        
+    <!-- Bento Grid Section -->
+    <section class="bento-section" id="features">
+        <h2 class="section-title">Powerful Features</h2>
+        <p class="section-subtitle">Built for performance, designed for excellence</p>
+
         <div class="bento-grid">
-            <!-- Large Card - Core Engine -->
-            <div class="bento-card large flip-card reveal">
-                <div class="flip-card-inner">
-                    <div class="flip-card-front">
-                        <i class="fas fa-cogs card-icon"></i>
-                        <h3 class="card-title">Symbolic Reasoning Engine</h3>
-                        <p class="card-description">Pure symbolic AI with deterministic inference</p>
-                        <div class="card-stats">
-                            <div class="stat">
-                                <div class="stat-value">&lt;5ms</div>
-                                <div class="stat-label">CRUD Ops</div>
-                            </div>
-                            <div class="stat">
-                                <div class="stat-value">100+</div>
-                                <div class="stat-label">Users</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flip-card-back">
-                        <i class="fas fa-microchip card-icon" style="color: #000;"></i>
-                        <h3 class="card-title">Technology Stack</h3>
-                        <p class="card-description">FastAPI • SQLAlchemy • NetworkX • Pydantic</p>
-                        <ul class="version-features" style="margin-top: 1rem;">
-                            <li>Robinson's Unification</li>
-                            <li>Forward/Backward Chaining</li>
-                            <li>Confidence Scoring (0.5-1.0)</li>
-                            <li>Knowledge Graph Persistence</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tall Card - Multilingual -->
-            <div class="bento-card tall reveal">
-                <i class="fas fa-language card-icon"></i>
-                <h3 class="card-title">Multilingual Support</h3>
-                <p class="card-description">Native processing for 5 major languages</p>
-                <div class="card-stats">
+            <div class="bento-card large">
+                <i class="fas fa-brain bento-icon"></i>
+                <h3>100% Symbolic Reasoning</h3>
+                <p>No LLMs, no neural models. Pure deterministic inference using Robinson's unification and Forward/Backward Chaining algorithms.</p>
+                <div class="bento-stats">
                     <div class="stat">
-                        <div class="stat-value">5</div>
-                        <div class="stat-label">Languages</div>
+                        <div class="stat-value">&lt;5ms</div>
+                        <div class="stat-label">CRUD Ops</div>
                     </div>
-                </div>
-                <ul class="version-features">
-                    <li>English (EN)</li>
-                    <li>Japanese (JA) - Janome/Sudachi</li>
-                    <li>Korean (KO)</li>
-                    <li>Chinese (ZH)</li>
-                    <li>French (FR)</li>
-                </ul>
-            </div>
-
-            <!-- Wide Card - Performance -->
-            <div class="bento-card wide reveal">
-                <i class="fas fa-tachometer-alt card-icon"></i>
-                <h3 class="card-title">Enterprise Performance</h3>
-                <p class="card-description">Optimized for edge deployment with minimal footprint</p>
-                <div class="metrics-grid" style="margin-top: 1rem; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
-                    <div class="metric-item" style="padding: 1rem;">
-                        <div class="metric-value" style="font-size: 2rem;">&lt;5ms</div>
-                        <div class="metric-label" style="font-size: 0.7rem;">CRUD</div>
-                    </div>
-                    <div class="metric-item" style="padding: 1rem;">
-                        <div class="metric-value" style="font-size: 2rem;">50-100ms</div>
-                        <div class="metric-label" style="font-size: 0.7rem;">Reasoning</div>
-                    </div>
-                    <div class="metric-item" style="padding: 1rem;">
-                        <div class="metric-value" style="font-size: 2rem;">100+</div>
-                        <div class="metric-label" style="font-size: 0.7rem;">Users</div>
-                    </div>
-                    <div class="metric-item" style="padding: 1rem;">
-                        <div class="metric-value" style="font-size: 2rem;">10K+</div>
-                        <div class="metric-label" style="font-size: 0.7rem;">Facts</div>
+                    <div class="stat">
+                        <div class="stat-value">50-100ms</div>
+                        <div class="stat-label">Reasoning</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Regular Card - Memory -->
-            <div class="bento-card reveal">
-                <i class="fas fa-memory card-icon"></i>
-                <h3 class="card-title">Low Memory</h3>
-                <p class="card-description">Optimized for resource-constrained environments</p>
-                <div class="card-stats">
+            <div class="bento-card">
+                <i class="fas fa-language bento-icon"></i>
+                <h3>Multilingual</h3>
+                <p>Support for English, Japanese, Korean, Chinese, and French with advanced language detection.</p>
+            </div>
+
+            <div class="bento-card tall">
+                <i class="fas fa-chart-line bento-icon"></i>
+                <h3>Performance Metrics</h3>
+                <p>Built for edge deployment with minimal resource footprint.</p>
+                <div class="bento-stats">
                     <div class="stat">
                         <div class="stat-value">&lt;100MB</div>
-                        <div class="stat-label">Footprint</div>
+                        <div class="stat-label">Memory</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">100+</div>
+                        <div class="stat-label">Users</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">10K+</div>
+                        <div class="stat-label">Facts</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Regular Card - WebSocket -->
-            <div class="bento-card reveal">
-                <i class="fas fa-broadcast-tower card-icon"></i>
-                <h3 class="card-title">Real-time Updates</h3>
-                <p class="card-description">WebSocket-powered live analytics dashboard</p>
+            <div class="bento-card">
+                <i class="fas fa-database bento-icon"></i>
+                <h3>Knowledge Graph</h3>
+                <p>NetworkX-powered graph structures with SQLite persistence.</p>
             </div>
 
-            <!-- Regular Card - Docker -->
-            <div class="bento-card reveal">
-                <i class="fab fa-docker card-icon"></i>
-                <h3 class="card-title">Docker Ready</h3>
-                <p class="card-description">Production-ready containerization</p>
+            <div class="bento-card wide">
+                <i class="fas fa-microchip bento-icon"></i>
+                <h3>Edge Optimized</h3>
+                <p>Designed specifically for edge environments with minimal resource requirements while maintaining enterprise-grade capabilities.</p>
             </div>
 
-            <!-- Regular Card - Tests -->
-            <div class="bento-card reveal">
-                <i class="fas fa-vial card-icon"></i>
-                <h3 class="card-title">Tested</h3>
-                <p class="card-description">Comprehensive test suite with pytest</p>
+            <div class="bento-card">
+                <i class="fas fa-plug bento-icon"></i>
+                <h3>Real-time WebSocket</h3>
+                <p>Live updates and instant communication with clients.</p>
+            </div>
+
+            <div class="bento-card">
+                <i class="fas fa-shield-check bento-icon"></i>
+                <h3>Type Safe</h3>
+                <p>Pydantic validation ensuring data integrity throughout the system.</p>
             </div>
         </div>
     </section>
 
     <!-- Versions Section -->
-    <section class="bento-section" style="background: rgba(212, 175, 55, 0.02);">
-        <h2 class="section-title reveal">Three Production Versions</h2>
-        <p class="section-subtitle reveal">Choose the perfect edition for your needs</p>
-        
-        <div class="bento-grid" style="grid-template-columns: repeat(3, 1fr);">
-            <!-- Version 7 -->
-            <div class="version-card reveal">
+    <section class="versions-section" id="versions">
+        <h2 class="section-title">Three Production Versions</h2>
+        <p class="section-subtitle">Choose the perfect edition for your needs</p>
+
+        <div class="version-cards">
+            <div class="version-card">
                 <span class="version-badge">v7.0</span>
-                <i class="fas fa-chart-line card-icon" style="font-size: 2.5rem;"></i>
-                <h3 class="card-title">Analysis Edition</h3>
-                <p class="card-description">Best for detailed analysis and debugging</p>
-                <ul class="version-features">
-                    <li>Detailed Unicode Analysis</li>
-                    <li>Logical Inference Tracing</li>
-                    <li>Entity Relationship Mapping</li>
-                    <li>Comprehensive Logging</li>
+                <h3>Analysis Edition</h3>
+                <p>Best for detailed analysis and debugging</p>
+                <ul>
+                    <li><i class="fas fa-check"></i> Detailed Unicode Analysis</li>
+                    <li><i class="fas fa-check"></i> Logical Analysis</li>
+                    <li><i class="fas fa-check"></i> Entity Analysis</li>
+                    <li><i class="fas fa-check"></i> Comprehensive Logging</li>
                 </ul>
-                <a href="#" class="cta-button" style="margin-top: 1.5rem; padding: 1rem 2rem; font-size: 1rem;">Launch v7.0</a>
+                <a href="#" class="version-btn">Launch v7.0</a>
             </div>
 
-            <!-- Version 8 -->
-            <div class="version-card reveal" style="border-color: var(--gold-primary); box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);">
-                <span class="version-badge" style="background: linear-gradient(135deg, #F4DF89 0%, #D4AF37 100%);">v8.2</span>
-                <i class="fas fa-sparkles card-icon" style="font-size: 2.5rem;"></i>
-                <h3 class="card-title">Bento Grid Edition</h3>
-                <p class="card-description">Best animations and visual experience</p>
-                <ul class="version-features">
-                    <li>Bento Grid Layout</li>
-                    <li>Flip Card Animations</li>
-                    <li>Scroll Effects</li>
-                    <li>Glass Morphism UI</li>
-                    <li>Mouse Hover Effects</li>
+            <div class="version-card">
+                <span class="version-badge">v8.2</span>
+                <h3>Bento Grid Edition</h3>
+                <p>Best for visual presentations and demos</p>
+                <ul>
+                    <li><i class="fas fa-check"></i> Bento Grid UI</li>
+                    <li><i class="fas fa-check"></i> Flip Card Animations</li>
+                    <li><i class="fas fa-check"></i> Scroll Effects</li>
+                    <li><i class="fas fa-check"></i> Multiple Themes</li>
                 </ul>
-                <a href="#" class="cta-button" style="margin-top: 1.5rem; padding: 1rem 2rem; font-size: 1rem;">Launch v8.2</a>
+                <a href="#" class="version-btn">Launch v8.2</a>
             </div>
 
-            <!-- Version 10 -->
-            <div class="version-card reveal">
-                <span class="version-badge" style="background: linear-gradient(135deg, #AA8C2C 0%, #D4AF37 100%);">v10.0</span>
-                <i class="fas fa-crown card-icon" style="font-size: 2.5rem;"></i>
-                <h3 class="card-title">Ultimate Edition</h3>
-                <p class="card-description">Everything combined - Recommended</p>
-                <ul class="version-features">
-                    <li>All v7.0 Analysis Features</li>
-                    <li>All v8.2 Animations</li>
-                    <li>Enhanced Performance</li>
-                    <li>Complete Feature Set</li>
-                    <li>Priority Support</li>
+            <div class="version-card">
+                <span class="version-badge" style="background: linear-gradient(135deg, #FFD700, #FFF, #B8860B);">v10.0</span>
+                <h3>Ultimate Edition</h3>
+                <p>Everything combined - Recommended</p>
+                <ul>
+                    <li><i class="fas fa-check"></i> All v7.0 Features</li>
+                    <li><i class="fas fa-check"></i> All v8.2 Animations</li>
+                    <li><i class="fas fa-check"></i> Enhanced Performance</li>
+                    <li><i class="fas fa-check"></i> Complete Integration</li>
                 </ul>
-                <a href="#" class="cta-button" style="margin-top: 1.5rem; padding: 1rem 2rem; font-size: 1rem;">Launch v10.0 ⭐</a>
+                <a href="#" class="version-btn">Launch v10.0</a>
             </div>
         </div>
     </section>
 
-    <!-- Architecture Section -->
-    <section class="bento-section">
-        <h2 class="section-title reveal">Architecture</h2>
-        <p class="section-subtitle reveal">Enterprise-grade layered design</p>
-        
-        <div class="bento-grid" style="grid-template-columns: repeat(2, 1fr);">
-            <div class="bento-card large reveal">
-                <i class="fas fa-layer-group card-icon"></i>
-                <h3 class="card-title">System Architecture</h3>
-                <div style="margin-top: 2rem; text-align: left;">
-                    <div style="padding: 1rem; margin-bottom: 1rem; background: rgba(212, 175, 55, 0.1); border-left: 3px solid var(--gold-primary); border-radius: 0 10px 10px 0;">
-                        <strong style="color: var(--gold-primary);">User Interface Layer</strong>
-                        <p style="color: rgba(255, 255, 255, 0.6); margin-top: 0.5rem;">v7.0 Analysis • v8.2 Bento Grid • v10.0 Ultimate</p>
-                    </div>
-                    <div style="padding: 1rem; margin-bottom: 1rem; background: rgba(212, 175, 55, 0.1); border-left: 3px solid var(--gold-primary); border-radius: 0 10px 10px 0;">
-                        <strong style="color: var(--gold-primary);">FastAPI Server Layer</strong>
-                        <p style="color: rgba(255, 255, 255, 0.6); margin-top: 0.5rem;">REST API • WebSocket • Request Validation</p>
-                    </div>
-                    <div style="padding: 1rem; margin-bottom: 1rem; background: rgba(212, 175, 55, 0.1); border-left: 3px solid var(--gold-primary); border-radius: 0 10px 10px 0;">
-                        <strong style="color: var(--gold-primary);">Symbolic Reasoning Engine</strong>
-                        <p style="color: rgba(255, 255, 255, 0.6); margin-top: 0.5rem;">Rule-based Inference • Unification • Confidence Scoring</p>
-                    </div>
-                    <div style="padding: 1rem; margin-bottom: 1rem; background: rgba(212, 175, 55, 0.1); border-left: 3px solid var(--gold-primary); border-radius: 0 10px 10px 0;">
-                        <strong style="color: var(--gold-primary);">Multilingual Processing</strong>
-                        <p style="color: rgba(255, 255, 255, 0.6); margin-top: 0.5rem;">5 Languages • Unicode Analysis • Tokenization</p>
-                    </div>
-                    <div style="padding: 1rem; background: rgba(212, 175, 55, 0.1); border-left: 3px solid var(--gold-primary); border-radius: 0 10px 10px 0;">
-                        <strong style="color: var(--gold-primary);">Knowledge Graph & Storage</strong>
-                        <p style="color: rgba(255, 255, 255, 0.6); margin-top: 0.5rem;">SQLite • NetworkX • Rule Persistence</p>
-                    </div>
+    <!-- Features Section with Scroll Animation -->
+    <section class="features-section" id="about">
+        <h2 class="section-title">Why Choose LRLRE?</h2>
+        <p class="section-subtitle">Enterprise-grade features for modern applications</p>
+
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
                 </div>
+                <h3>Lightning Fast</h3>
+                <p>Sub-5ms CRUD operations and 50-100ms complex reasoning cycles ensure responsive performance even under heavy load.</p>
             </div>
 
-            <div class="bento-card large reveal">
-                <i class="fas fa-code card-icon"></i>
-                <h3 class="card-title">Key Technologies</h3>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 2rem;">
-                    <div style="padding: 1.5rem; background: rgba(212, 175, 55, 0.1); border-radius: 15px; text-align: center;">
-                        <i class="fab fa-python" style="font-size: 2.5rem; color: var(--gold-primary); margin-bottom: 0.5rem;"></i>
-                        <div style="font-weight: 700;">Python 3.11</div>
-                        <div style="color: rgba(255, 255, 255, 0.5); font-size: 0.9rem;">Core Language</div>
-                    </div>
-                    <div style="padding: 1.5rem; background: rgba(212, 175, 55, 0.1); border-radius: 15px; text-align: center;">
-                        <i class="fas fa-bolt" style="font-size: 2.5rem; color: var(--gold-primary); margin-bottom: 0.5rem;"></i>
-                        <div style="font-weight: 700;">FastAPI 0.104.1</div>
-                        <div style="color: rgba(255, 255, 255, 0.5); font-size: 0.9rem;">Web Framework</div>
-                    </div>
-                    <div style="padding: 1.5rem; background: rgba(212, 175, 55, 0.1); border-radius: 15px; text-align: center;">
-                        <i class="fas fa-database" style="font-size: 2.5rem; color: var(--gold-primary); margin-bottom: 0.5rem;"></i>
-                        <div style="font-weight: 700;">SQLAlchemy 2.0.23</div>
-                        <div style="color: rgba(255, 255, 255, 0.5); font-size: 0.9rem;">Database ORM</div>
-                    </div>
-                    <div style="padding: 1.5rem; background: rgba(212, 175, 55, 0.1); border-radius: 15px; text-align: center;">
-                        <i class="fas fa-project-diagram" style="font-size: 2.5rem; color: var(--gold-primary); margin-bottom: 0.5rem;"></i>
-                        <div style="font-weight: 700;">NetworkX 3.6.1</div>
-                        <div style="color: rgba(255, 255, 255, 0.5); font-size: 0.9rem;">Graph Processing</div>
-                    </div>
-                    <div style="padding: 1.5rem; background: rgba(212, 175, 55, 0.1); border-radius: 15px; text-align: center;">
-                        <i class="fas fa-check-circle" style="font-size: 2.5rem; color: var(--gold-primary); margin-bottom: 0.5rem;"></i>
-                        <div style="font-weight: 700;">Pydantic 2.12.5</div>
-                        <div style="color: rgba(255, 255, 255, 0.5); font-size: 0.9rem;">Data Validation</div>
-                    </div>
-                    <div style="padding: 1.5rem; background: rgba(212, 175, 55, 0.1); border-radius: 15px; text-align: center;">
-                        <i class="fas fa-server" style="font-size: 2.5rem; color: var(--gold-primary); margin-bottom: 0.5rem;"></i>
-                        <div style="font-weight: 700;">Uvicorn 0.24.0</div>
-                        <div style="color: rgba(255, 255, 255, 0.5); font-size: 0.9rem;">ASGI Server</div>
-                    </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-expand"></i>
                 </div>
+                <h3>Highly Scalable</h3>
+                <p>Support for 100+ simultaneous users and 10,000+ facts/rules capacity makes it perfect for enterprise deployments.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>100% Explainable</h3>
+                <p>Every inference is traceable and explainable. No black-box neural networks, just pure symbolic reasoning.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3>Multilingual Ready</h3>
+                <p>Built-in support for 5 languages with extensible architecture for adding more language processors.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Edge Optimized</h3>
+                <p>Less than 100MB memory footprint makes it ideal for edge devices and resource-constrained environments.</p>
+            </div>
+
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-wrench"></i>
+                </div>
+                <h3>Easy Integration</h3>
+                <p>REST API and WebSocket interfaces make integration with existing systems straightforward and efficient.</p>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="cta-section">
-        <h2 class="section-title reveal">Ready to Get Started?</h2>
-        <p class="section-subtitle reveal" style="margin-bottom: 2rem;">Clone the repository and launch your instance in minutes</p>
-        
-        <div style="background: var(--black-glass); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; max-width: 800px; margin: 0 auto 3rem; backdrop-filter: blur(20px);">
-            <code style="color: var(--gold-light); font-size: 1.1rem; display: block; overflow-x: auto; padding: 1rem;">
-                git clone https://github.com/dell/lrlre.git && cd lrlre<br>
-                python -m venv venv && venv\Scripts\activate<br>
-                pip install -r requirements.txt<br>
-                python launch_final.py
-            </code>
+    <section class="cta-section" id="contact">
+        <div class="cta-box">
+            <div class="cta-content">
+                <h2>Ready to Get Started?</h2>
+                <p>Join the future of symbolic AI reasoning. Deploy LRLRE in your environment today.</p>
+                <div class="cta-buttons">
+                    <a href="https://github.com/dell/lrlre" class="btn-primary">
+                        <i class="fab fa-github"></i> Clone Repository
+                    </a>
+                    <a href="#" class="btn-secondary">
+                        <i class="fas fa-book"></i> Read Documentation
+                    </a>
+                </div>
+            </div>
         </div>
-        
-        <a href="https://github.com/dell/lrlre" target="_blank" class="cta-button reveal">
-            <i class="fab fa-github"></i> View on GitHub
-        </a>
     </section>
 
     <!-- Footer -->
     <footer>
         <div class="footer-content">
             <div class="social-links">
-                <a href="https://github.com/dell/lrlre" class="social-link"><i class="fab fa-github"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
+                <a href="https://github.com/dell/lrlre" class="social-link">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="fab fa-discord"></i>
+                </a>
             </div>
-            <p class="copyright">
-                Built with ❤️ by the LRLRE Project Team<br>
-                100% Symbolic • 0% Neural • 100% Explainable<br>
-                © 2024 LRLRE. Licensed under MIT License.
+            <p class="footer-text">
+                Built with <span class="footer-highlight">❤️</span> by the LRLRE Project Team
+            </p>
+            <p class="footer-text">
+                <span class="footer-highlight">100% Symbolic</span> •
+                <span class="footer-highlight">0% Neural</span> •
+                <span class="footer-highlight">100% Explainable</span>
+            </p>
+            <p class="footer-text" style="margin-top: 1rem; font-size: 0.9rem;">
+                &copy; 2024 LRLRE. Licensed under MIT License.
             </p>
         </div>
     </footer>
 
     <script>
-        // Create floating particles
+        // Create particles
         const particlesContainer = document.getElementById('particles');
         for (let i = 0; i < 50; i++) {
             const particle = document.createElement('div');
@@ -957,116 +1107,98 @@
             particlesContainer.appendChild(particle);
         }
 
-        // Mouse glow effect
-        const glowEffect = document.getElementById('glowEffect');
+        // Cursor glow effect
+        const cursorGlow = document.getElementById('cursorGlow');
         document.addEventListener('mousemove', (e) => {
-            glowEffect.style.left = e.clientX + 'px';
-            glowEffect.style.top = e.clientY + 'px';
+            cursorGlow.style.left = e.clientX + 'px';
+            cursorGlow.style.top = e.clientY + 'px';
         });
 
-        // Scroll reveal animation
-        function reveal() {
-            const reveals = document.querySelectorAll('.reveal');
-            const windowHeight = window.innerHeight;
-            const elementVisible = 150;
-
-            reveals.forEach((reveal) => {
-                const elementTop = reveal.getBoundingClientRect().top;
-                if (elementTop < windowHeight - elementVisible) {
-                    reveal.classList.add('active');
-                }
-            });
-        }
-
-        window.addEventListener('scroll', reveal);
-        reveal(); // Initial check
-
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-
-        // Parallax effect for tree
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const treeContainer = document.querySelector('.tree-container');
-            if (treeContainer) {
-                treeContainer.style.transform = `translateX(-50%) translateY(${scrolled * 0.3}px)`;
-            }
-        });
-
-        // 3D tilt effect for cards
-        document.querySelectorAll('.bento-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = (y - centerY) / 10;
-                const rotateY = (centerX - x) / 10;
-                
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px) scale(1.02)`;
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0) scale(1)';
-            });
-        });
-
-        // Counter animation for stats
-        function animateCounter(element, target, duration = 2000) {
-            let start = 0;
-            const increment = target / (duration / 16);
-            
-            function updateCounter() {
-                start += increment;
-                if (start < target) {
-                    element.textContent = Math.floor(start).toLocaleString();
-                    requestAnimationFrame(updateCounter);
-                } else {
-                    element.textContent = target.toLocaleString();
-                }
-            }
-            
-            updateCounter();
-        }
-
-        // Intersection Observer for counter animation
+        // Scroll animations
         const observerOptions = {
-            threshold: 0.5
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
         };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const statValues = entry.target.querySelectorAll('.stat-value');
-                    statValues.forEach(stat => {
-                        const text = stat.textContent;
-                        if (text.includes('<')) {
-                            // Skip animated values with < symbol
-                            return;
-                        }
-                        const num = parseInt(text.replace(/[^0-9]/g, ''));
-                        if (!isNaN(num)) {
-                            animateCounter(stat, num);
-                        }
-                    });
-                    observer.unobserve(entry.target);
+                    entry.target.classList.add('visible');
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.bento-card').forEach(card => {
-            observer.observe(card);
+        document.querySelectorAll('.feature-item').forEach((item, index) => {
+            item.style.transitionDelay = (index * 0.1) + 's';
+            observer.observe(item);
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 3D card tilt effect
+        document.querySelectorAll('.bento-card, .version-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            });
+        });
+
+        // Parallax effect on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach((particle, index) => {
+                const speed = 0.1 + (index % 5) * 0.05;
+                particle.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+
+        // Animate stats on scroll
+        const animateValue = (obj, start, end, duration) => {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        // Trigger tree animation on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelectorAll('.leaf').forEach((leaf, index) => {
+                    leaf.style.animationDelay = (3.2 + index * 0.2) + 's';
+                });
+            }, 100);
         });
     </script>
 </body>
